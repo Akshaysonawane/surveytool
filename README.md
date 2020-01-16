@@ -1,5 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Project Description
+This project captures survey answers from users and create a commulative graphical representation from it.  
+
+
 ## Available Scripts
 
 In the project directory, you can run:
