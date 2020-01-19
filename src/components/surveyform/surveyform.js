@@ -18,19 +18,11 @@ class SurveyForm extends Component {
                     obj[element2] = {...result.data[element1][element2], survey_types: [...result.data[element1][element2].survey_types]};
                 });
             });
-            
-            // var surveyTypes = [];
-            // console.log(result.data['-LygnJeqU02csBjH_jpr']);
-            // surveyTypes = Object.keys(result.data['-LygnJeqU02csBjH_jpr']).map(element => {
-            //     return result.data['-LygnJeqU02csBjH_jpr'][element].name;
-            // });
-
-            // console.log(obj);
 
             this.setState({
                 questions: {...obj},
             });
-            // console.log(this.state.questions);
+            console.log(this.state.questions);
         })
         .catch(error => {
             console.log(error);
@@ -38,12 +30,27 @@ class SurveyForm extends Component {
     };
 
     render() {
+        var form  = null;
+        
+        if(this.state.questions != null) {
+            form  = Object.keys(this.state.questions).map((ele, index) => {
+                if(this.state.questions[ele].survey_types.indexOf(this.props.selectedId) !== -1) {
+                    return (
+                        <div key={index}>
+                        <p>{this.state.questions[ele].question}</p>
+                        <input type="radio" name={ele + '_ans'} value={this.state.questions[ele]['option 1']} />{this.state.questions[ele]['option 1']}<br/>
+                        <input type="radio" name={ele + '_ans'} value={this.state.questions[ele]['option 2']} />{this.state.questions[ele]['option 2']}<br/>
+                        <input type="radio" name={ele + '_ans'} value={this.state.questions[ele]['option 3']} />{this.state.questions[ele]['option 3']}
+                        </div>
+                    );
+                }
+            });
+        }
+
         return (
             <div>
                 <form>
-                    <input type="radio" name="gender" value="male" checked /> Male<br/>
-                    <input type="radio" name="gender" value="female" /> Female<br/>
-                    <input type="radio" name="gender" value="other" /> Other  
+                    {form}
                 </form> 
             </div>
         );
