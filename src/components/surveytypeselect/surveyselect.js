@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Dropdown, } from 'react-bootstrap';
+import { Dropdown,} from 'react-bootstrap';
 
 import classes from './surveyselect.module.css';
 import SurveyForm from '../surveyform/surveyform';
@@ -59,14 +59,15 @@ class SurveySelect extends Component {
                 );
             });
         } else {
-            listItems = <Dropdown.Item>Survey types not loaded yet</Dropdown.Item>;
+            listItems = <option>Survey types not loaded yet</option>;
         }
 
 
         return (
             <div>
                 <Dropdown className={classes.dropdown}>
-                    <select id="surveytypeselect" onChange={this.setSurveyType}>
+                    <Dropdown.Header>Survey's Available to fill</Dropdown.Header>
+                    <select id="surveytypeselect" className="browser-default custom-select" onChange={this.setSurveyType}>
                         <option value="select survey" key={0}>select survey</option>
                         {listItems}
                     </select>      

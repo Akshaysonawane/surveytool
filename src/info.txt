@@ -17,3 +17,14 @@
       <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
                     <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                     <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+
+
+
+console.log(this.state.answers);
+        axios.post('https://cors-anywhere.herokuapp.com/https://survey-tool-eca20.firebaseio.com/surveydata.json', this.state.answers).
+        then(result => {
+            alert("Answer submitted:)");
+        }).
+        catch(error => {
+            alert(error);
+        });

@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Dropdown, } from 'react-bootstrap';
+import { 
+    Card, 
+    Button,
+    Form,
+} from 'react-bootstrap';
+
+import classes from './surveyform.module.css';
 
 class SurveyForm extends Component {
 
     state = {
         questions: null,
+        answers: [],
     };
 
     componentDidMount() {
@@ -29,6 +36,42 @@ class SurveyForm extends Component {
         });
     };
 
+    saveSurveyData = () => {
+        console.log(this.state.answers);
+        var ansObj = {'ans': [...this.state.answers]};
+        console.log(ansObj);
+        alert('booo');
+        axios.post('https://survey-tool-eca20.firebaseio.com/surveydata.json', ansObj)
+        .then(result => {
+            alert('oooo');
+            alert("Answer submitted:)");
+        })
+        .catch(error => {
+            alert(error);
+        });
+    };
+
+    setAnswer = (question_id, question) => {
+        alert(question_id);
+        var ans_obj = {};
+        ans_obj.question_id = question_id;
+        ans_obj.question = question;
+        var ele = document.getElementsByName(question_id + '_ans');
+
+        for(let i = 0; i < ele.length; i++) { 
+            if(ele[i].checked) 
+            ans_obj.answer = ele[i].value; 
+        };
+
+        // console.log(ans_obj);
+
+        this.setState({
+            answers: [...this.state.answers, ans_obj],
+        });
+
+        console.log(this.state);
+    }
+p
     render() {
         var form  = null;
         
@@ -36,22 +79,43 @@ class SurveyForm extends Component {
             form  = Object.keys(this.state.questions).map((ele, index) => {
                 if(this.state.questions[ele].survey_types.indexOf(this.props.selectedId) !== -1) {
                     return (
-                        <div key={index}>
-                        <p>{this.state.questions[ele].question}</p>
-                        <input type="radio" name={ele + '_ans'} value={this.state.questions[ele]['option 1']} />{this.state.questions[ele]['option 1']}<br/>
-                        <input type="radio" name={ele + '_ans'} value={this.state.questions[ele]['option 2']} />{this.state.questions[ele]['option 2']}<br/>
-                        <input type="radio" name={ele + '_ans'} value={this.state.questions[ele]['option 3']} />{this.state.questions[ele]['option 3']}
-                        </div>
+                        <Form.Group key={index}>
+                        <Card body border="primary" style={{ width: 'auto' }}>
+                        <Form.Label>{this.state.questions[ele].question}</Form.Label>
+                        <Form.Check 
+                            type="radio" 
+                            name={ele + '_ans'}
+                            value={this.state.questions[ele]['option 1']}
+                            label={this.state.questions[ele]['option 1']} 
+                            onChange={() => {this.setAnswer(ele, this.state.questions[ele].question)}}/>
+                        <Form.Check
+                            type="radio" 
+                            name={ele + '_ans'} 
+                            value={this.state.questions[ele]['option 2']}
+                            label={this.state.questions[ele]['option 2']} 
+                            onChange={() => {this.setAnswer(ele, this.state.questions[ele].question)}}/>
+                        <Form.Check
+                            type="radio" 
+                            name={ele + '_ans'} 
+                            value={this.state.questions[ele]['option 3']}
+                            label={this.state.questions[ele]['option 3']}  
+                            onChange={() => {this.setAnswer(ele, this.state.questions[ele].question)}}/>
+                        </Card>
+                        </Form.Group>
                     );
                 }
             });
         }
 
         return (
-            <div>
-                <form>
+            <div className={classes.questiondiv}>
+                <Form onSubmit={this.saveSurveyData} className={classes.surveyform}>
                     {form}
-                </form> 
+                    <Button type="submit">
+                        Submit Survey
+                    </Button>
+                    {/* <input type="submit" value="Submit Servey" onClick={this.saveSurveyData}></input> */}
+                </Form> 
             </div>
         );
     }
