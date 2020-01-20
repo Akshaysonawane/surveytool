@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { 
     Card, 
@@ -45,6 +46,7 @@ class SurveyForm extends Component {
         .then(result => {
             alert('oooo');
             alert("Answer submitted:)");
+            this.props.history.push('/results');
         })
         .catch(error => {
             alert(error);
@@ -121,4 +123,4 @@ p
     }
 }
 
-export default SurveyForm;
+export default withRouter(SurveyForm);

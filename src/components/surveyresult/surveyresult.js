@@ -8,4 +8,4 @@ class SurveyResult extends Component {
     }
 };
 
-export default SurveyForm;
+export default SurveyResult;
