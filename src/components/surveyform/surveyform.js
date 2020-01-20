@@ -109,9 +109,9 @@ p
 
         return (
             <div className={classes.questiondiv}>
-                <Form onSubmit={this.saveSurveyData} className={classes.surveyform}>
+                <Form className={classes.surveyform} onSubmit={(evt) => { evt.preventDefault() }}>
                     {form}
-                    <Button type="submit">
+                    <Button type="submit" onClick={this.saveSurveyData}>
                         Submit Survey
                     </Button>
                     {/* <input type="submit" value="Submit Servey" onClick={this.saveSurveyData}></input> */}
