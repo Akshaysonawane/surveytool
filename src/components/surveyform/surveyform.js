@@ -41,11 +41,8 @@ class SurveyForm extends Component {
         console.log(this.state.answers);
         var ansObj = {'ans': [...this.state.answers]};
         console.log(ansObj);
-        alert('booo');
         axios.post('https://survey-tool-eca20.firebaseio.com/surveydata.json', ansObj)
         .then(result => {
-            alert('oooo');
-            alert("Answer submitted:)");
             this.props.history.push('/results');
         })
         .catch(error => {
@@ -54,7 +51,7 @@ class SurveyForm extends Component {
     };
 
     setAnswer = (question_id, question) => {
-        alert(question_id);
+        // alert(question_id);
         var ans_obj = {};
         ans_obj.question_id = question_id;
         ans_obj.question = question;

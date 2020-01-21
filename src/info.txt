@@ -28,3 +28,13 @@ console.log(this.state.answers);
         catch(error => {
             alert(error);
         });
+
+
+// result object format
+surveyResultCounts : {
+  'q1' : {
+    'question': 'From belwo what genre of movies you like the most?',
+    '1. Action': 1,
+    '2. Bollywood': 2,
+  }
+}
