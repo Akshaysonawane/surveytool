@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Doughnut, Bar, Line, Pie } from 'react-chartjs-2';
+
 import SurveyForm from '../surveyform/surveyform';
 
 class SurveyResult extends Component {
@@ -21,7 +23,6 @@ class SurveyResult extends Component {
 
             Object.keys(result.data).map((element1, index) => {
                 Object.keys(result.data[element1]['ans']).map((element2, index) => {
-                    // result.data[element1]['ans'][element2]
                     if (this.state.surveyResultCounts != null) {
                         if(result.data[element1]['ans'][element2].question_id in stateObj) {
                             if(result.data[element1]['ans'][element2].answer in stateObj[result.data[element1]['ans'][element2].question_id]) {
@@ -42,10 +43,9 @@ class SurveyResult extends Component {
 
             console.log(stateObj);
 
-            // this.setState({
-            //     questions: {...obj},
-            // });
-            // console.log(this.state.questions);
+            this.setState({
+                surveyResultCounts: {...stateObj},
+            });
         })
         .catch(error => {
             console.log(error);
@@ -53,7 +53,45 @@ class SurveyResult extends Component {
     };
 
     render() {
-        return (<h1 style={{textAlign: 'center'}}>Patience my friend Patience!</h1>);
+        var graphs, labels =  null;
+        var data_values = [];
+        var data = {
+            datasets: [{
+                data: [],
+                backgroundColor: [
+                    'red',
+                    'orange',
+                    'yellow',
+                ],
+                label: 'Surevy Data'
+            }],
+            labels: [],
+        };
+        graphs = Object.keys(this.state.surveyResultCounts).map((ele1, index1) => {
+            labels = Object.keys(this.state.surveyResultCounts[ele1]).map((ele2, index2) => {
+                if(ele2 !== 'question') {
+                    data_values.push(this.state.surveyResultCounts[ele1][ele2]);
+                    return ele2;
+                }
+            });
+            data.labels = [];
+            data.labels = [...labels]
+            data.datasets[0].data = [];
+            data.datasets[0].data = [...data_values];
+            console.log(data);
+            return (
+                <Bar
+                    data={data}
+                    options={{ maintainAspectRatio: false }}
+                />
+            );
+        });
+        return (
+            <div>
+                <h1 style={{textAlign: 'center'}}>Patience my friend Patience!</h1>
+                {graphs}
+            </div>
+        );
     }
 };
 
