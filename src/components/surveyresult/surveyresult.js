@@ -180,7 +180,7 @@ class SurveyResult extends PureComponent {
         });
 
         return (
-            <div>
+            <div style={{height: '20rem'}}>
                 {graphs}
             </div>
         );

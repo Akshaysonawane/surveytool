@@ -38,16 +38,20 @@ class SurveyForm extends Component {
     };
 
     saveSurveyData = (selectedSurveytype) => {
-        console.log(this.state.answers);
-        var ansObj = {'ans': [...this.state.answers]};
-        console.log(ansObj);
-        axios.post('https://survey-tool-eca20.firebaseio.com/'+ selectedSurveytype +'.json', ansObj)
-        .then(result => {
-            this.props.history.push('/results');
-        })
-        .catch(error => {
-            alert(error);
-        });
+
+        if(Object.keys(this.state.questions).length === this.state.answers.length)
+        {
+            console.log(this.state.answers);
+            var ansObj = { 'ans': [...this.state.answers] };
+            console.log(ansObj);
+            axios.post('https://survey-tool-eca20.firebaseio.com/' + selectedSurveytype + '.json', ansObj)
+                .then(result => {
+                    this.props.history.push('/results');
+                })
+                .catch(error => {
+                    alert(error);
+                });
+        }
     };
 
     setAnswer = (question_id, question) => {
@@ -68,7 +72,7 @@ class SurveyForm extends Component {
             answers: [...this.state.answers, ans_obj],
         });
 
-        console.log(this.state);
+        console.log(this.state.answers);
     }
 p
     render() {
@@ -81,7 +85,7 @@ p
                         <Form.Group key={index}>
                         <Card body border="primary" style={{ width: 'auto' }}>
                         <Form.Label>{this.state.questions[ele].question}</Form.Label>
-                        <Form.Check 
+                        <Form.Check required
                             type="radio" 
                             name={ele + '_ans'}
                             value={this.state.questions[ele]['option 1']}
