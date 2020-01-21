@@ -37,11 +37,11 @@ class SurveyForm extends Component {
         });
     };
 
-    saveSurveyData = () => {
+    saveSurveyData = (selectedSurveytype) => {
         console.log(this.state.answers);
         var ansObj = {'ans': [...this.state.answers]};
         console.log(ansObj);
-        axios.post('https://survey-tool-eca20.firebaseio.com/surveydata.json', ansObj)
+        axios.post('https://survey-tool-eca20.firebaseio.com/'+ selectedSurveytype +'.json', ansObj)
         .then(result => {
             this.props.history.push('/results');
         })
@@ -110,7 +110,7 @@ p
             <div className={classes.questiondiv}>
                 <Form className={classes.surveyform} onSubmit={(evt) => { evt.preventDefault() }}>
                     {form}
-                    <Button type="submit" onClick={this.saveSurveyData}>
+                    <Button type="submit" onClick={() => {this.saveSurveyData(this.props.typeselected)}}>
                         Submit Survey
                     </Button>
                     {/* <input type="submit" value="Submit Servey" onClick={this.saveSurveyData}></input> */}

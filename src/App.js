@@ -6,6 +6,7 @@ import './App.css';
 import Header from './components/header/header';
 import SelectAndFrom from './components/selectandform/selectandform';
 import SurveyResults from './components/surveyresult/surveyresult';
+import ResultAndSearch from './components/resultandserach/resultandsearch';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
       <div className="App">
         <Header />
         <Route exact path="/" component={SelectAndFrom} />
-        <Route exact path="/results" component={SurveyResults} />
+        <Route exact path="/results" component={ResultAndSearch} />
       </div>
     </BrowserRouter>
   );

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Dropdown,} from 'react-bootstrap';
 
-import classes from './surveyselect.module.css';
-import SurveyForm from '../surveyform/surveyform';
+import classes from '../surveytypeselect/surveyselect.module.css';
+import SurveyResult from '../surveyresult/surveyresult';
 
-class SurveySelect extends Component {
+class SurveyResultSelect extends Component {
 
     state = {
         surveyTypes : null,
@@ -32,7 +32,7 @@ class SurveySelect extends Component {
 
     setSurveyType = () => {
         var select = null;
-        select = document.getElementById("surveytypeselect").value;
+        select = document.getElementById("surveyresulttypeselect").value;
         if(select != null && select !== "select survey") {
             this.setState({
                 typeSelected: select,
@@ -42,13 +42,14 @@ class SurveySelect extends Component {
                 typeSelected: false,
             });
         }
+        console.log(this.state.typeSelected);
     };
 
     render() {
         var selectedId = null, surveyForm = null;
         if(this.state.typeSelected !== false) {
             selectedId = this.state.surveyTypes.indexOf(this.state.typeSelected) + 1;
-            surveyForm = <SurveyForm typeselected={this.state.typeSelected} selectedId={selectedId}/>;
+            surveyForm = <SurveyResult typeselected={this.state.typeSelected}/>;
         }
 
         var listItems;
@@ -65,9 +66,10 @@ class SurveySelect extends Component {
 
         return (
             <div>
+                <h1 style={{textAlign: 'center'}}>Survey Results!!!</h1>
                 <Dropdown className={classes.dropdown}>
                     <Dropdown.Header>Survey Available</Dropdown.Header>
-                    <select id="surveytypeselect" className="browser-default custom-select" onChange={this.setSurveyType}>
+                    <select id="surveyresulttypeselect" className="browser-default custom-select" onChange={this.setSurveyType}>
                         <option value="select survey" key={0}>select survey</option>
                         {listItems}
                     </select>      
@@ -78,4 +80,4 @@ class SurveySelect extends Component {
     }
 }
 
-export default SurveySelect;
+export default SurveyResultSelect;

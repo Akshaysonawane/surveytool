@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import { 
     Navbar, 
@@ -9,7 +10,7 @@ class Header extends Component {
     render() {
         return (
             <Navbar bg="primary" variant="dark">
-                <Navbar.Brand>Survey Tool</Navbar.Brand>
+                <Navbar.Brand onClick={() => {this.props.history.push('/');}} style={{cursor:'pointer'}}>Survey Tool</Navbar.Brand>
                 <Nav className="mr-auto">
                     {/* <Nav.Link>View Surveys</Nav.Link> */}
                 </Nav>
@@ -21,4 +22,4 @@ class Header extends Component {
     }
 };
 
-export default Header;
+export default withRouter(Header);
