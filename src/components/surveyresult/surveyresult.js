@@ -1,13 +1,7 @@
 import React, { PureComponent } from 'react';
 import axios from 'axios';
-import { Doughnut, Bar, Line, Pie } from 'react-chartjs-2';
-import { 
-    Card, 
-    Form,
-} from 'react-bootstrap';
-
-import SurveyForm from '../surveyform/surveyform';
-import SurveyTypeSelect from '../surveytypeselect/surveyselect';
+import { connect } from 'react-redux'
+import { Bar } from 'react-chartjs-2';
 
 class SurveyResult extends PureComponent {
 
@@ -16,62 +10,11 @@ class SurveyResult extends PureComponent {
         surveyResultCounts: {},
     };
 
-    componentDidMount() {
-        alert(this.props.typeselected);
-
-        axios.get('https://survey-tool-eca20.firebaseio.com/'+ this.props.typeselected.trim() +'.json')
-        .then(result => {
-            console.log(result.data);
-            var obj = {};
-
-            var stateObj = {
-                ...this.state.surveyResultCounts,
-            };
-
-            Object.keys(result.data).map((element1, index) => {
-                Object.keys(result.data[element1]['ans']).map((element2, index) => {
-                    if (this.state.surveyResultCounts != null) {
-                        if(result.data[element1]['ans'][element2].question_id in stateObj) {
-                            if(result.data[element1]['ans'][element2].answer in stateObj[result.data[element1]['ans'][element2].question_id]) {
-                                stateObj[result.data[element1]['ans'][element2].question_id][result.data[element1]['ans'][element2].answer] = stateObj[result.data[element1]['ans'][element2].question_id][result.data[element1]['ans'][element2].answer] + 1; 
-                            } else {
-                                stateObj[result.data[element1]['ans'][element2].question_id][result.data[element1]['ans'][element2].answer] = 1;
-                            }
-                        } else {
-                            var questionObj = {};
-                            questionObj.question = result.data[element1]['ans'][element2].question;
-                            questionObj[result.data[element1]['ans'][element2].answer] = 1;
-
-                            stateObj[result.data[element1]['ans'][element2].question_id] = questionObj;
-                        }
-                    }
-                });
-            });
-
-            // console.log(stateObj);
-
-            this.setState({
-                surveyResultCounts: {...stateObj},
-            });
-            // console.log(this.state.surveyResultCounts);
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    };
-
-
-    componentDidUpdate() {
-        // alert(this.props.typeselected);
-        alert('blabla');
-
+    getSlectedSurveyResult = () => {
         var stateObj = { };
 
-        axios.get('https://survey-tool-eca20.firebaseio.com/'+ this.props.typeselected.trim() +'.json')
+        axios.get('https://survey-tool-eca20.firebaseio.com/'+ this.props.typeselected.trim() +'.json?auth=' + this.props.token)
         .then(result => {
-            console.log(result.data);
-            var obj = {};
-
             Object.keys(result.data).map((element1, index) => {
                 Object.keys(result.data[element1]['ans']).map((element2, index) => {
                     if (this.state.surveyResultCounts != null) {
@@ -91,31 +34,33 @@ class SurveyResult extends PureComponent {
                     }
                 });
             });
-
-            // console.log(stateObj);
 
             this.setState(prevState => {
                 let prevObjString = JSON.stringify(prevState.surveyResultCounts);
                 let currentObjString = JSON.stringify(stateObj);
                 if(prevObjString !== currentObjString)
                 {
-                    console.log('104', stateObj);
                     return {
                         surveyResultCounts: {...stateObj},
                     }
                 }
-            },() => {
-                console.log(this.state.surveyResultCounts);
             });
-            // console.log(this.state.surveyResultCounts);
         })
         .catch(error => {
             console.log(error);
         });
+    }
+
+    componentDidMount() {
+        this.getSlectedSurveyResult();
+    };
+
+
+    componentDidUpdate() {
+        this.getSlectedSurveyResult();
     };
 
     render() {
-        //alert(this.props.typeselected);
         var graphs, labels =  null;
         var data_values = [];
         var options = {
@@ -156,16 +101,13 @@ class SurveyResult extends PureComponent {
                     return ele2;
                 }
             });
-            console.log(data_values);
-           // return;
+
             data.labels = [];
             labels.shift();
             data.labels = [...labels]
             data.datasets[0].data = [];
             data.datasets[0].label = this.state.surveyResultCounts[ele1]['question'];
             data.datasets[0].data = [...data_values];
-
-            console.log(data);
             
             return (
                     <Bar key={index1}
@@ -187,4 +129,14 @@ class SurveyResult extends PureComponent {
     }
 };
 
-export default SurveyResult;
+const mapStateToProps = state => {
+    return {
+        loading: state.loading,
+        token: state.token,
+        error: state.error,
+        isAuthenticated: state.token !== null,
+        authRedirectPath: state.authRedirectPath,
+    };
+}
+
+export default connect(mapStateToProps)(SurveyResult);

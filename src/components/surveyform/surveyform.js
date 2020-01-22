@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux'
 import axios from 'axios';
 import { 
     Card, 
@@ -17,9 +18,8 @@ class SurveyForm extends Component {
     };
 
     componentDidMount() {
-        axios.get('https://cors-anywhere.herokuapp.com/https://survey-tool-eca20.firebaseio.com/questions.json')
+        axios.get('https://cors-anywhere.herokuapp.com/https://survey-tool-eca20.firebaseio.com/questions.json?auth='+ this.props.token)
         .then(result => {
-            // console.log(result.data);
             var obj = {};
             Object.keys(result.data).map((element1, index) => {
                 Object.keys(result.data[element1]).map((element2, index) => {
@@ -30,7 +30,6 @@ class SurveyForm extends Component {
             this.setState({
                 questions: {...obj},
             });
-            console.log(this.state.questions);
         })
         .catch(error => {
             console.log(error);
@@ -38,24 +37,17 @@ class SurveyForm extends Component {
     };
 
     saveSurveyData = (selectedSurveytype) => {
-
-        if(Object.keys(this.state.questions).length === this.state.answers.length)
-        {
-            console.log(this.state.answers);
             var ansObj = { 'ans': [...this.state.answers] };
-            console.log(ansObj);
-            axios.post('https://survey-tool-eca20.firebaseio.com/' + selectedSurveytype + '.json', ansObj)
+            axios.post('https://survey-tool-eca20.firebaseio.com/' + selectedSurveytype + '.json?auth='+this.props.token, ansObj)
                 .then(result => {
                     this.props.history.push('/results');
                 })
                 .catch(error => {
-                    alert(error);
+                    console.log(error);
                 });
-        }
     };
 
     setAnswer = (question_id, question) => {
-        // alert(question_id);
         var ans_obj = {};
         ans_obj.question_id = question_id;
         ans_obj.question = question;
@@ -66,13 +58,9 @@ class SurveyForm extends Component {
             ans_obj.answer = ele[i].value; 
         };
 
-        // console.log(ans_obj);
-
         this.setState({
             answers: [...this.state.answers, ans_obj],
         });
-
-        console.log(this.state.answers);
     }
 p
     render() {
@@ -124,4 +112,22 @@ p
     }
 }
 
-export default withRouter(SurveyForm);
+
+const mapStateToProps = state => {
+    return {
+        loading: state.loading,
+        token: state.token,
+        error: state.error,
+        isAuthenticated: state.token !== null,
+        authRedirectPath: state.authRedirectPath,
+    };
+}
+
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
+//         onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
+//     };
+// }
+
+export default withRouter(connect(mapStateToProps)(SurveyForm));

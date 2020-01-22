@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Dropdown,} from 'react-bootstrap';
+import { connect } from 'react-redux'
 
 import classes from './surveyselect.module.css';
 import SurveyForm from '../surveyform/surveyform';
@@ -13,10 +14,9 @@ class SurveySelect extends Component {
     };
     
     componentDidMount() {
-        axios.get('https://cors-anywhere.herokuapp.com/https://survey-tool-eca20.firebaseio.com/surveytypes.json')
+        axios.get('https://cors-anywhere.herokuapp.com/https://survey-tool-eca20.firebaseio.com/surveytypes.json?auth=' + this.props.token)
         .then(result => {
             var surveyTypes = [];
-            // console.log(result.data['-LygnJeqU02csBjH_jpr']);
             surveyTypes = Object.keys(result.data['-LygnJeqU02csBjH_jpr']).map(element => {
                 return result.data['-LygnJeqU02csBjH_jpr'][element].name;
             });
@@ -49,6 +49,8 @@ class SurveySelect extends Component {
         if(this.state.typeSelected !== false) {
             selectedId = this.state.surveyTypes.indexOf(this.state.typeSelected) + 1;
             surveyForm = <SurveyForm typeselected={this.state.typeSelected} selectedId={selectedId}/>;
+        } else {
+        surveyForm = <h3 style={{padding: '10rem'}}>Please select survey from dropdown</h3>
         }
 
         var listItems;
@@ -78,4 +80,21 @@ class SurveySelect extends Component {
     }
 }
 
-export default SurveySelect;
+const mapStateToProps = state => {
+    return {
+        loading: state.loading,
+        token: state.token,
+        error: state.error,
+        isAuthenticated: state.token !== null,
+        authRedirectPath: state.authRedirectPath,
+    };
+}
+
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
+//         onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
+//     };
+// }
+
+export default connect(mapStateToProps)(SurveySelect);
