@@ -12,7 +12,7 @@ The project focuses on front-end and hence firebase apis has been used for back-
 4. char.js2 to display survey bar charts
 
 ## Scope of Improvement
-1. Clearly UI can be improved a lot
+1. UI can be improved to a good extent
 2. Error messages needs to be shown on success or failure
 3. Reuse of Dropdown component can be done
 
