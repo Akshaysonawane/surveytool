@@ -4,12 +4,17 @@ import { connect } from 'react-redux'
 import { Bar } from 'react-chartjs-2';
 
 class SurveyResult extends PureComponent {
+    /* This component displays the results in graphical representation.
+        Using Bar graph from chart.js2 to display graphs
+    */
 
     // state to store the number of people gave selected particular option for particular question.
     state = {
         surveyResultCounts: {},
     };
 
+    // function to get survey results data from firebase based on survey type selected.
+    // Calculating addition/count of similar votes/answers to display in graph
     getSlectedSurveyResult = () => {
         var stateObj = { };
 
@@ -35,6 +40,7 @@ class SurveyResult extends PureComponent {
                 });
             });
 
+            // check if new object is different from previous state and then only update if true. 
             this.setState(prevState => {
                 let prevObjString = JSON.stringify(prevState.surveyResultCounts);
                 let currentObjString = JSON.stringify(stateObj);
@@ -55,7 +61,6 @@ class SurveyResult extends PureComponent {
         this.getSlectedSurveyResult();
     };
 
-
     componentDidUpdate() {
         this.getSlectedSurveyResult();
     };
@@ -63,7 +68,8 @@ class SurveyResult extends PureComponent {
     render() {
         var graphs, labels =  null;
         var data_values = [];
-        var options = {
+        // options to be used for graph
+        var options = {             
             responsive: true,
             scales: {
                 yAxes: [{
@@ -74,6 +80,7 @@ class SurveyResult extends PureComponent {
             }
         };
 
+        // creating chart for each question based on commulative answer count
         graphs = Object.keys(this.state.surveyResultCounts).map((ele1, index1) => {
             data_values = [];
             var data = {
@@ -95,7 +102,6 @@ class SurveyResult extends PureComponent {
                 labels: [],
             };
             labels = Object.keys(this.state.surveyResultCounts[ele1]).map((ele2, index2) => {
-                
                 if(ele2 !== 'question') {
                     data_values.push(this.state.surveyResultCounts[ele1][ele2]);
                     return ele2;
@@ -103,7 +109,7 @@ class SurveyResult extends PureComponent {
             });
 
             data.labels = [];
-            labels.shift();
+            labels.shift();     
             data.labels = [...labels]
             data.datasets[0].data = [];
             data.datasets[0].label = this.state.surveyResultCounts[ele1]['question'];
@@ -131,11 +137,9 @@ class SurveyResult extends PureComponent {
 
 const mapStateToProps = state => {
     return {
-        loading: state.loading,
         token: state.token,
         error: state.error,
         isAuthenticated: state.token !== null,
-        authRedirectPath: state.authRedirectPath,
     };
 }
 

@@ -1,7 +1,6 @@
 import React, {  Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
-
 import {
     Form,
     Button
@@ -11,23 +10,20 @@ import './auth.module.css';
 import * as actions from '../../store/actions/index';
 
 class Auth extends Component {
+    // state to store email and password
     state = {
         email: '',
         password: '',
-        isSignup: true,
+        isSignup: true,                // To switch between SignIn and SignUp
     };
 
-    // componentDidMount () {
-    //     if (this.props.authRedirectPath !== '/') {
-    //         this.props.onSetAuthRedirectPath('/');
-    //     }
-    // }
-
+    // function to submit email and pasword entered by user
     submitHandler = (event) => {
         event.preventDefault();
-        this.props.onAuth(this.state.email, this.state.password, this.state.isSignup);
+        this.props.onAuth(this.state.email, this.state.password, this.state.isSignup);    // Dispatch action to cal an api
     }
 
+    // function to switch between SignIn and SignUp
     switchAuthModeHanlder = () => {
         this.setState(prevState => {
             return {
@@ -36,6 +32,7 @@ class Auth extends Component {
         });
     }
 
+    // On chnage function to store email and password in state
     inputChangedHandler = (event) => {
         if(event.target.id === 'emailInput') {
             this.setState({
@@ -50,8 +47,8 @@ class Auth extends Component {
 
     render() {
         let errorMessage = null;
-        if(this.props.error) {
-            errorMessage = (
+        if(this.props.error) {          // If there is any error from SignIn or SignUp api
+            errorMessage = (            // Displaying row messgae. Need to improve the UI
                 <p>
                     {this.props.error.message}
                 </p>
@@ -59,7 +56,7 @@ class Auth extends Component {
         }
 
         let authRedirect = null;
-        if(this.props.isAuthenticated) {
+        if(this.props.isAuthenticated) {            // Redirect user to Home(Survey Form) page if authenticated
             authRedirect = <Redirect to="/"/>
         }
 
@@ -114,17 +111,14 @@ class Auth extends Component {
 
 const mapStateToProps = state => {
     return {
-        loading: state.loading,
         error: state.error,
         isAuthenticated: state.token !== null,
-        authRedirectPath: state.authRedirectPath,
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
-        onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
     };
 }
 

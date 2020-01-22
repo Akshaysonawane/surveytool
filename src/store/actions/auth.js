@@ -7,6 +7,7 @@ export const authStart = () => {
     };
 };
 
+// store token and userId after successfull authentication
 export const authSuccess = (token, userId) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
@@ -22,6 +23,7 @@ export const authFail = (error) => {
     };
 };
 
+// logout function clear local storage data
 export const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('expirationDate');
@@ -31,6 +33,7 @@ export const logout = () => {
     };
 }
 
+// funciton to call logout after expiration type crosses
 export const checkAuthTimeout = (expirationTime) => {
     return dispatch => {
         setTimeout(() => {
@@ -39,6 +42,7 @@ export const checkAuthTimeout = (expirationTime) => {
     }
 }
 
+// Authenticating user afetr calling SignIn or SignUp api
 export const auth = (email, password, isSignup) => {
     return dispatch => {
         dispatch(authStart());
@@ -66,13 +70,7 @@ export const auth = (email, password, isSignup) => {
     };
 };
 
-export const setAuthRedirectPath = (path) => {
-    return {
-        type: actionTypes.SET_AUTH_REDIRECT_PATH,
-        path: path,
-    }
-}
-
+// to check if user authenticated on refresh
 export const authCheckState = () => {
     return dispatch => {
         const token = localStorage.getItem('token');

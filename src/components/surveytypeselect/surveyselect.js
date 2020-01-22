@@ -7,12 +7,16 @@ import classes from './surveyselect.module.css';
 import SurveyForm from '../surveyform/surveyform';
 
 class SurveySelect extends Component {
-
+    /*
+        component to display dropdown while filling the survey form
+    */
+   // State to store survey types and type selected from dropdown 
     state = {
         surveyTypes : null,
         typeSelected: false,
     };
     
+    // Calling firebase api to get survey types to display in dropdown
     componentDidMount() {
         axios.get('https://cors-anywhere.herokuapp.com/https://survey-tool-eca20.firebaseio.com/surveytypes.json?auth=' + this.props.token)
         .then(result => {
@@ -30,6 +34,7 @@ class SurveySelect extends Component {
         });
     };
 
+    // function to set type selected in state
     setSurveyType = () => {
         var select = null;
         select = document.getElementById("surveytypeselect").value;
@@ -82,19 +87,10 @@ class SurveySelect extends Component {
 
 const mapStateToProps = state => {
     return {
-        loading: state.loading,
         token: state.token,
         error: state.error,
         isAuthenticated: state.token !== null,
-        authRedirectPath: state.authRedirectPath,
     };
 }
-
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
-//         onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
-//     };
-// }
 
 export default connect(mapStateToProps)(SurveySelect);

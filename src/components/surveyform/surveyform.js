@@ -11,12 +11,17 @@ import {
 import classes from './surveyform.module.css';
 
 class SurveyForm extends Component {
+    /*
+        This component fetches survey questions and display based on survey type selected by user.
+    */
 
+    // State to store questions fetched from firebase and answers submited by user
     state = {
         questions: null,
         answers: [],
     };
 
+    // Calling firebase api to fetch questions from firebase
     componentDidMount() {
         axios.get('https://cors-anywhere.herokuapp.com/https://survey-tool-eca20.firebaseio.com/questions.json?auth='+ this.props.token)
         .then(result => {
@@ -36,6 +41,7 @@ class SurveyForm extends Component {
         });
     };
 
+    // function to submit answers to firebase and redirecting to results page
     saveSurveyData = (selectedSurveytype) => {
             var ansObj = { 'ans': [...this.state.answers] };
             axios.post('https://survey-tool-eca20.firebaseio.com/' + selectedSurveytype + '.json?auth='+this.props.token, ansObj)
@@ -43,14 +49,16 @@ class SurveyForm extends Component {
                     this.props.history.push('/results');
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log(error);     // Need to display proper error message to user 
                 });
     };
 
+    // function to set anwers for particular questions in state
     setAnswer = (question_id, question) => {
         var ans_obj = {};
         ans_obj.question_id = question_id;
         ans_obj.question = question;
+
         var ele = document.getElementsByName(question_id + '_ans');
 
         for(let i = 0; i < ele.length; i++) { 
@@ -66,6 +74,7 @@ p
     render() {
         var form  = null;
         
+        // Create form to shwo questions based on type selected by user
         if(this.state.questions != null) {
             form  = Object.keys(this.state.questions).map((ele, index) => {
                 if(this.state.questions[ele].survey_types.indexOf(this.props.selectedId) !== -1) {
@@ -105,7 +114,6 @@ p
                     <Button type="submit" onClick={() => {this.saveSurveyData(this.props.typeselected)}}>
                         Submit Survey
                     </Button>
-                    {/* <input type="submit" value="Submit Servey" onClick={this.saveSurveyData}></input> */}
                 </Form> 
             </div>
         );
@@ -115,19 +123,11 @@ p
 
 const mapStateToProps = state => {
     return {
-        loading: state.loading,
         token: state.token,
         error: state.error,
         isAuthenticated: state.token !== null,
-        authRedirectPath: state.authRedirectPath,
     };
 }
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
-//         onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
-//     };
-// }
-
+// using withRouter as I am using history props above to redirect to results page
 export default withRouter(connect(mapStateToProps)(SurveyForm));

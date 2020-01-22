@@ -7,12 +7,15 @@ import classes from '../surveytypeselect/surveyselect.module.css';
 import SurveyResult from '../surveyresult/surveyresult';
 
 class SurveyResultSelect extends Component {
-
+    // state to store survey types available in firebase database
     state = {
         surveyTypes : null,
-        typeSelected: false,
+        typeSelected: false,            // state varibale to store selected survey type from dropdown  
     };
     
+    /* getting survey types from firebase and storing in state.
+        using workarroung found online to bypass cors policy error
+    */ 
     componentDidMount() {
         axios.get('https://cors-anywhere.herokuapp.com/https://survey-tool-eca20.firebaseio.com/surveytypes.json?auth='+this.props.token)
         .then(result => {
@@ -26,10 +29,12 @@ class SurveyResultSelect extends Component {
             });
         })
         .catch(error => {
+            // Loggin error in console, Need to show proper error message popup to user.
             console.log(error);
         });
     };
 
+    // fcuntion to set typeSelected in state to slected survey type from dropdown
     setSurveyType = () => {
         var select = null;
         select = document.getElementById("surveyresulttypeselect").value;
@@ -48,11 +53,15 @@ class SurveyResultSelect extends Component {
         var surveyForm = null;
         if(this.state.typeSelected !== false) {
             // selectedId = this.state.surveyTypes.indexOf(this.state.typeSelected) + 1;
+            // Display Survey result if type is selected from dropdown
             surveyForm = <SurveyResult typeselected={this.state.typeSelected}/>;
         } else {
+            // If survey type not selected then displaying a message
+            // UI needs to be improved here too
             surveyForm = <h3 style={{padding: '10rem'}}>Please select survey from dropdown</h3>
         }
 
+        // Creating a varibale to display survey type in dropdown
         var listItems;
         if(this.state.surveyTypes != null) {
             listItems = this.state.surveyTypes.map((element, index) => {
@@ -61,6 +70,7 @@ class SurveyResultSelect extends Component {
                 );
             });
         } else {
+            // Message to show in dropdown if survey types are nto loaded
             listItems = <option>Survey types not loaded yet</option>;
         }
 
@@ -83,19 +93,10 @@ class SurveyResultSelect extends Component {
 
 const mapStateToProps = state => {
     return {
-        loading: state.loading,
         token: state.token,
         error: state.error,
         isAuthenticated: state.token !== null,
-        authRedirectPath: state.authRedirectPath,
-    };
+    }
 }
-
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
-//         onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
-//     };
-// }
 
 export default connect(mapStateToProps)(SurveyResultSelect);
