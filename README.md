@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Please visit the Link https://survey-tool-eca20.web.app/ to view the project.
+
 ## Project Description
 This project captures survey answers from users and create a commulative graphical representation from it. The project displays questions and/or results based on survey type selected from drop down.
 
@@ -15,6 +17,7 @@ The project focuses on front-end and hence firebase apis has been used for back-
 1. UI can be improved to a good extent
 2. Error messages needs to be shown on success or failure
 3. Reuse of Dropdown component can be done
+4. Admin part can be adde to add or remove questions and surveys
 
 ## References
 1. Official react-bootstrap website to use bootstrap components
