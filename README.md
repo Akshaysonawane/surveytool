@@ -18,7 +18,8 @@ The project focuses on front-end and hence firebase apis has been used for back-
 2. Error messages needs to be shown on success or failure
 3. Reuse of Dropdown component can be done
 4. Admin part can be adde to add or remove questions and surveys
-. Same user should not be able to fill the survey again and again
+5. Same user should not be able to fill the survey again and again
+6. Better password input conditions to improve password can be added
 
 ## References
 1. Official react-bootstrap website to use bootstrap components
